@@ -1,0 +1,342 @@
+LIST VIEW XML
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_margin="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vistitas" />
+
+</LinearLayout>
+
+BASURITA
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageicon" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview"
+            android:textSize="20dp"
+            android:gravity="center"/>
+            
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:id="@+id/textview2"
+            android:textSize="20dp"
+            android:gravity="center"/>
+            
+    </LinearLayout>
+</LinearLayout>
+
+ADAPTADOR
+package com.example.proyectolistview;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class Adaptador extends BaseAdapter {
+    Context contexto;
+    String listaositos[];
+    String listaComentar[];
+    int listaImagenes[];
+    LayoutInflater inflater;
+
+    // Constructor que recibe los datos desde el MainActivity
+    public Adaptador(Context contexto, String[] listaositos, String[] listaComentar, int[] listaImagenes) {
+        this.contexto = contexto;
+        this.listaositos = listaositos;
+        this.listaComentar = listaComentar;
+        this.listaImagenes = listaImagenes;
+        this.inflater = LayoutInflater.from(contexto);
+    }
+
+    @Override
+    public int getCount() {
+        return listaComentar.length; // Retorna el número total de elementos
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // Inflamos el diseño visual basurita.xml para cada renglón
+        convertView = inflater.inflate(R.layout.basurita, null);
+        
+        TextView textView = convertView.findViewById(R.id.textview);
+        TextView textView2 = convertView.findViewById(R.id.textview2);
+        ImageView ositoimg = convertView.findViewById(R.id.imageicon);
+
+        // Asignamos los datos de los arreglos según la posición actual (position)
+        textView.setText(listaositos[position]);
+        textView2.setText(listaComentar[position]);
+        ositoimg.setImageResource(listaImagenes[position]);
+
+        return convertView;
+    }
+}
+
+MAIN
+package com.example.proyectolistview;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    ListView listView;
+    
+    // Arreglos de datos que alimentarán la lista
+    String ositosComenta[] = {"uno", "dos", "tres", "cuatro", "cinco"};
+    String ositosListe[] = {"01", "02", "03", "04", "05"};
+    int ositosImagenes[] = {
+        R.drawable.amarillo, 
+        R.drawable.amorosita, 
+        R.drawable.cafe, 
+        R.drawable.morado, 
+        R.drawable.rojo
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Vinculamos el ListView del XML
+        listView = findViewById(R.id.vistitas);
+        listView.setOnItemClickListener(this);
+
+        // Creamos una instancia del adaptador y se la asignamos al ListView
+        Adaptador adaptadorcito = new Adaptador(this, ositosListe, ositosComenta, ositosImagenes);
+        listView.setAdapter(adaptadorcito);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // Evento que se dispara al hacer clic en cualquier elemento de la lista
+        Toast.makeText(this, "Seleccionaste el elemento: " + position, Toast.LENGTH_SHORT).show();
+    }
+}
+
+
+
+
+
+
+
+
+
+MENU
+XML
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <item
+        android:id="@+id/saludito"
+        android:title="saludo"
+        app:showAsAction="ifRoom"/>
+        
+    <item
+        android:id="@+id/otrosaludito"
+        android:title="otro saludo"
+        app:showAsAction="ifRoom"/>
+        
+</menu>
+
+MNSJITOS
+package com.example.proyectolistview;
+
+public class mensajitos {
+    public String getSaludo() {
+        return "hola que tal";
+    }
+
+    public String getOtroSaludo() {
+        return "hola nuevamente";
+    }
+}
+
+
+MAIN
+// Método 1: Infla y dibuja los tres puntos del menú en la esquina superior derecha
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menusito, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Método 2: Captura la opción seleccionada por el usuario y utiliza la clase POJO 'mensajitos'
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        mensajitos msj = new mensajitos(); // Instanciamos la clase POJO
+
+        if (item.getItemId() == R.id.saludito) {
+            Toast.makeText(this, msj.getSaludo(), Toast.LENGTH_LONG).show();
+        } else if (item.getItemId() == R.id.otrosaludito) {
+            Toast.makeText(this, msj.getOtroSaludo(), Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
+
+MENU ARITMETICO
+package com.example.proyectomenu;
+
+public class Clasesita {
+    public int textitol;
+    public int textito2;
+
+    public int getTextitol() { return textitol; }
+    public void setTextitol(int textitol) { this.textitol = textitol; }
+
+    public int getTextito2() { return textito2; }
+    public void setTextito2(int textito2) { this.textito2 = textito2; }
+
+    public int suma() { return textitol + textito2; }
+    public int resta() { return textitol - textito2; }
+    public int multiplicacion() { return textitol * textito2; }
+    public int division() { return textitol / textito2; }
+}
+```[cite: 23]
+
+---
+
+### 2. `menusito.xml` (El menú con las opciones de operaciones ubicado en `res/menu/`)
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <item
+        android:id="@+id/sumita"
+        android:title="suma"
+        app:showAsAction="ifRoom"/>
+        
+    <item
+        android:id="@+id/restita"
+        android:title="resta"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/multiplicadita"
+        android:title="multiplicación"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/partidita"
+        android:title="división"
+        app:showAsAction="ifRoom"/>
+        
+</menu>
+```[cite: 26]
+
+---
+
+### 3. Implementación en tu `MainActivity.java` (o Activity correspondiente)
+Aquí se capturan los valores numéricos de dos cajas de texto (`EditText`), se pasan a la clase `Clasesita` y se muestra el resultado en un `Toast` según la opción del menú que elijas:
+
+```java
+package com.example.proyectomenu;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText textitol, textito2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    // Método para inflar el menú de tres puntos
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menusito, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Método que evalúa qué opción del menú se seleccionó y ejecuta la operación
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Vinculamos los EditText donde el usuario ingresa los números
+        textitol = findViewById(R.id.valorcito1);
+        textito2 = findViewById(R.id.valorcito2);
+
+        // Instanciamos la clase POJO de lógica
+        Clasesita objetito = new Clasesita();
+        
+        // Convertimos el texto ingresado a enteros (Integer.parseInt) y los enviamos a la clase
+        objetito.setTextitol(Integer.parseInt(textitol.getText().toString()));
+        objetito.setTextito2(Integer.parseInt(textito2.getText().toString()));
+
+        // Validamos cuál opción del menú se presionó
+        if (item.getItemId() == R.id.sumita) {
+            Toast.makeText(this, "El resultado de la suma es: " + objetito.suma(), Toast.LENGTH_LONG).show();
+        } 
+        else if (item.getItemId() == R.id.restita) {
+            Toast.makeText(this, "El resultado de la resta es: " + objetito.resta(), Toast.LENGTH_LONG).show();
+        } 
+        else if (item.getItemId() == R.id.multiplicadita) {
+            Toast.makeText(this, "El resultado de la multiplicación es: " + objetito.multiplicacion(), Toast.LENGTH_LONG).show();
+        } 
+        else if (item.getItemId() == R.id.partidita) {
+            Toast.makeText(this, "El resultado de la división es: " + objetito.division(), Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+}
+```[cite: 24]
